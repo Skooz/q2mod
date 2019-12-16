@@ -269,7 +269,9 @@ void NoAmmoWeaponChange (edict_t *ent)
 		ent->client->newweapon = FindItem ("shotgun");
 		return;
 	}
-	ent->client->newweapon = FindItem ("blaster");
+	//TESMOD
+	//ent->client->newweapon = FindItem ("blaster");
+	ent->client->newweapon = FindItem("Hands");
 }
 
 /*
@@ -829,8 +831,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	//fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
-	fire_bfg(ent, start, forward, damage, 400, 2000);
+	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1432,4 +1433,65 @@ void Weapon_BFG (edict_t *ent)
 }
 
 
-//======================================================================
+// TESMOD
+
+/*
+=======================
+Punching/Melee
+
+Code from: https://www.moddb.com/games/quake-2/tutorials/adding-a-new-weapon-melee
+=======================
+*/
+
+void Null_Fire(edict_t *ent)
+{
+	int	i;
+	vec3_t		start;
+	vec3_t		forward, right;
+	vec3_t		angles;
+	int			damage = 15; // Base damage
+	int			range = 45;	 // Base range
+	int			kick = 2;    // Recoil?
+	vec3_t		offset;
+
+	if (ent->client->ps.gunframe == 11)
+	{
+		ent->client->ps.gunframe++;
+		return;
+	}
+
+	AngleVectors(ent->client->v_angle, forward, right, NULL);
+	VectorScale(forward, -2, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -2;
+	VectorSet(offset, 0, 8, ent->viewheight - 8);
+	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+
+	if (is_quad){
+		damage *= 4;
+		kick *= 4;
+	}
+
+	// get start / end positions
+	VectorAdd(ent->client->v_angle, ent->client->kick_angles, angles);
+	AngleVectors(angles, forward, right, NULL);
+	VectorSet(offset, 0, 8, ent->viewheight - 8);
+	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+
+	// Do the slice
+	fire_punch(ent, start, forward, range, damage, 200, 1, MOD_PUNCH); 
+
+	ent->client->ps.gunframe++; //NEEDED
+	PlayerNoise(ent, start, PNOISE_WEAPON); //NEEDED
+
+	//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	//		ent->client->pers.inventory[ent->client->ammo_index]--; // comment these out to prevent the Minus NULL Ammo bug
+}
+
+void Weapon_Null(edict_t *ent)
+{
+	// Weapons model swapped with the blaster, so it should be the same frames.
+	static int	pause_frames[]	= {19, 32, 0};
+	static int	fire_frames[]	= {5, 0};
+
+	Weapon_Generic(ent, 4, 8, 52, 55, pause_frames, fire_frames, Null_Fire);
+}

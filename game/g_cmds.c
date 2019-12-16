@@ -899,6 +899,241 @@ void Cmd_PlayerList_f(edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }
 
+// TESMOD
+
+/*
+Spells!
+
+SpellHeal
+SpellHaste
+SpellAttack
+SpellConjure
+SpellInvis
+*/
+
+/*
+==================
+Cmd_SpellHeal_f
+
+Uses the heal spell. Exchange magicka for health.
+==================
+*/
+void Cmd_SpellHeal_f(edict_t *ent)
+{
+	char	*msg;
+	int spellCost = 20;
+
+	if (ent->health < ent->max_health)
+	{
+		if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
+		{
+			ent->magicka -= spellCost;	// Remove magicka
+			ent->health += spellCost/2;	// Add health
+			if (ent->health >= ent->max_health) ent->health = ent->max_health; // If we over-heal, then correct.
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/l_health.wav"), 1, ATTN_NORM, 0); // Play a sound!
+			msg = "You have been healed!\n"; // Send a message!
+			ent->max_magicka += 2; // Increase magicka for growth.
+		}
+		else
+			msg = "You lack sufficient magicka!\n";
+	}
+	else
+		msg = "Your health is full!\n";
+
+	gi.cprintf(ent, PRINT_HIGH, msg); // Print the message
+}
+
+/*
+==================
+Cmd_SpellReplenish_f
+
+Uses the replenish spell. Exchange magicka for stamina.
+==================
+*/
+void Cmd_SpellReplenish_f(edict_t *ent)
+{
+	char	*msg;
+	int spellCost = 20;
+
+	if (ent->stamina < ent->max_stamina)
+	{
+		if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
+		{
+			ent->magicka -= spellCost;	// Remove magicka
+			ent->stamina += spellCost/2;	// Add stamina
+			if (ent->stamina >= ent->max_stamina) ent->stamina = ent->max_stamina; // If we over-heal, then correct.
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/l_health.wav"), 1, ATTN_NORM, 0); // Play a sound!
+			msg = "You have been healed!\n"; // Send a message!
+			ent->max_magicka += 2; // Increase magicka for growth.
+		}
+		else
+			msg = "You lack sufficient magicka!\n";
+	}
+	else
+		msg = "Your stamina is full!\n";
+
+	gi.cprintf(ent, PRINT_HIGH, msg); // Print the message
+}
+
+/*
+==================
+Cmd_SpellHaste_f
+
+Increase your movement speed, for a small mana cost, and stamina degeneration.
+==================
+*/
+void Cmd_SpellHaste_f(edict_t *ent)
+{
+	char	*msg;
+	int		spellCost = 15; // Initial magicka cost
+	int		stamDrain = 4;	// Stamina upkeep cost
+
+	if (ent->hasteToggle == 0)
+	{
+		if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
+		{
+			ent->hasteToggle	 = 1;			// Toggle effect
+			ent->magicka		-= spellCost;	// Remove magicka
+			ent->stamina_degen = stamDrain;			// Stamina degen
+			gi.cvar_set("cl_forwardspeed", "400"); // Increase Speeds
+			gi.cvar_set("cl_sidespeed", "400");
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0); // Make a sound!
+			msg = "Your speed has increased!\nYour stamina is draining!\n"; // Send a message!
+			ent->max_magicka += 1;		// Increase magicka for growth.
+			ent->max_stamina += 1;		// Increase stamina for growth.
+		}
+		else
+		{
+			msg = "You lack sufficient magicka!\n";
+		}
+	}
+	else if (ent->hasteToggle == 1)
+	{
+		ent->hasteToggle = 0;
+		ent->stamina_degen = 0;			// Reset stamina degen
+		gi.cvar_set("cl_forwardspeed", "200"); // Reset Speed
+		gi.cvar_set("cl_sidespeed", "200");
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
+		msg = "Your speed has normalized!\nYour stamina is no longer draining!\n"; // Send a message!
+	}
+
+	gi.cprintf(ent, PRINT_HIGH, msg); // Print the message
+}
+
+// This function is needed to fire a projectile, which the attack spell uses.
+static void P_ProjectSource(gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
+{
+	vec3_t	_distance;
+
+	VectorCopy(distance, _distance);
+	if (client->pers.hand == LEFT_HANDED)
+		_distance[1] *= -1;
+	else if (client->pers.hand == CENTER_HANDED)
+		_distance[1] = 0;
+	G_ProjectSource(point, _distance, forward, right, result);
+}
+
+/*
+==================
+Cmd_SpellAttack_f
+
+Uses the attack spell. Boosts attack.
+==================
+*/
+void Cmd_SpellAttack_f(edict_t *ent)
+{
+	char	*msg;
+	int spellCost = 25;
+	vec3_t	offset, start;
+	vec3_t	forward, right;
+	int		damage = 25;
+	float	damage_radius = 300;
+	int		radius_damage = 25;
+
+	if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
+	{
+		ent->magicka -= spellCost; // Remove magicka
+		AngleVectors(ent->client->v_angle, forward, right, NULL);
+		VectorScale(forward, -2, ent->client->kick_origin);
+		ent->client->kick_angles[0] = -1;
+		VectorSet(offset, 8, 8, ent->viewheight - 8);
+		P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+		fire_rocket(ent, start, forward, damage, 650, damage_radius, radius_damage); // Fireball is a rocket, but no model.
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0); // Play a sound!
+		msg = "You threw a fireball!\n"; // Display a message!
+		ent->max_magicka += 3; // Increase magicka for growth.
+	}
+	else
+	{
+		msg = "You lack sufficient magicka!\n";
+	}
+
+	gi.cprintf(ent, PRINT_HIGH, msg); // Print the message
+}
+
+/*
+==================
+Cmd_SpellConjure_f
+
+Summon an ally to fight alongside you!
+
+Deprecated?
+==================
+*/
+void Cmd_SpellConjure_f(edict_t *ent)
+{
+	char	*msg;
+	int spellCost = 50;
+
+	if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
+	{
+		ent->magicka -= spellCost; // Remove magicka
+		// Spawn a boi.
+		msg = "You summoned an ally!\n";
+		ent->max_magicka += 2; // Increase magicka for growth.
+	}
+	else
+	{
+		msg = "You lack sufficient magicka!\n";
+	}
+
+	gi.cprintf(ent, PRINT_HIGH, msg); // Print the message
+}
+
+/*
+==================
+Cmd_SpellInvis_f
+
+Uses the invisibility spell
+
+Makes use of notarget because it's the same thing, but we're checking different things here.
+==================
+*/
+void Cmd_SpellInvis_f(edict_t *ent)
+{
+	char	*msg;
+	int magDrain = 7; // This is a channeled spell, so no cost.
+
+	if (!(ent->flags & FL_NOTARGET)) // If we're not invisible...
+	{
+		ent->magicka_degen = magDrain; // Set magicka drain
+		ent->flags ^= FL_NOTARGET;		// Toggle notarget
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
+		msg = "You are invisible.\n";
+		ent->max_magicka += 2; // Increase magicka for growth.
+	}
+	else
+	{
+		ent->magicka_degen = 0;
+		ent->flags ^= FL_NOTARGET;
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
+		msg = "You are no longer invisible.\n";
+	}
+
+	gi.cprintf(ent, PRINT_HIGH, msg); // Print the message
+}
+
+
 
 /*
 =================
@@ -987,6 +1222,19 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	// TESMOD
+	else if (Q_stricmp(cmd, "SpellHeal") == 0)
+		Cmd_SpellHeal_f(ent);
+	else if (Q_stricmp(cmd, "SpellReplenish") == 0)
+		Cmd_SpellReplenish_f(ent);
+	else if (Q_stricmp(cmd, "SpellHaste") == 0)
+		Cmd_SpellHaste_f(ent);
+	else if (Q_stricmp(cmd, "SpellAttack") == 0)
+		Cmd_SpellAttack_f(ent);
+	else if (Q_stricmp(cmd, "SpellConjure") == 0)
+		Cmd_SpellConjure_f(ent);
+	else if (Q_stricmp(cmd, "SpellInvis") == 0)
+		Cmd_SpellInvis_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

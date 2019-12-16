@@ -35,6 +35,8 @@ void Weapon_Grenade (edict_t *ent);
 void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
+// TESMOD
+void Weapon_Null(edict_t *ent);
 
 gitem_armor_t jacketarmor_info	= { 25,  50, .30, .00, ARMOR_JACKET};
 gitem_armor_t combatarmor_info	= { 50, 100, .60, .30, ARMOR_COMBAT};
@@ -499,11 +501,15 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 	if (!Add_Ammo (other, ent->item, count))
 		return false;
 
+	// TESMOD
 	if (weapon && !oldcount)
 	{
-		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("blaster") ) )
+		//if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("blaster") ) )
+		if (other->client->pers.weapon != ent->item && (!deathmatch->value || other->client->pers.weapon == FindItem("Hands")))
 			other->client->newweapon = ent->item;
 	}
+
+	
 
 	if (!(ent->spawnflags & (DROPPED_ITEM | DROPPED_PLAYER_ITEM)) && (deathmatch->value))
 		SetRespawn (ent, 30);
@@ -1284,6 +1290,29 @@ gitem_t	itemlist[] =
 	//
 	// WEAPONS 
 	//
+
+	// TESMOD
+	// MODELS AND SHIT
+	{
+		"weapon_null",           //  The map entity name. dont include this in a map whatever you do.
+		NULL,                    // The pickup function
+		Use_Weapon,              // How to use
+		NULL,                    // the drop function
+		Weapon_Null,             //What the use function is
+		"misc/w_pkup.wav",
+		"models/weapons/knife2/knifeq2.md2", 0, // world model?
+		"models/weapons/knife2/knifeq2.md2",	  // View model?
+		"w_blaster",             //Icon to be used. you could create another, you probably should
+		"Hands",             //Pickup name. use this to give the item to someone at the start of the game
+		0,
+		0,
+		NULL,
+		IT_WEAPON | IT_STAY_COOP,
+		WEAP_BLASTER,            // the model index, just an integer defined in g_local.h
+		NULL,
+		0,
+		""
+	},
 
 /* weapon_blaster (.3 .3 1) (-16 -16 -16) (16 16 16)
 always owned, never in the world

@@ -654,6 +654,22 @@ char *single_statusbar =
 "xv	50 "
 "pic 0 "
 
+// magicka
+"if 18"
+"	xv	75 "
+"	mnum "
+"	xv	125 "
+"	pic 18 "
+"endif "
+
+// stamina
+"if 20"
+"	xv	150 "
+"	snum "
+"	xv	200 "
+"	pic 20 "
+"endif "
+
 // ammo
 "if 2 "
 "	xv	100 "
@@ -711,6 +727,22 @@ char *dm_statusbar =
 "hnum "
 "xv	50 "
 "pic 0 "
+
+// magicka
+"if 18"
+"	xv	75 "
+"	mnum "
+"	xv	125 "
+"	pic 18 "
+"endif "
+
+// stamina
+"if 20"
+"	xv	150 "
+"	snum "
+"	xv	200 "
+"	pic 20 "
+"endif "
 
 // ammo
 "if 2 "
@@ -847,6 +879,9 @@ void SP_worldspawn (edict_t *ent)
 	// help icon for statusbar
 	gi.imageindex ("i_help");
 	level.pic_health = gi.imageindex ("i_health");
+	// TESMOD
+	level.pic_magicka = gi.imageindex("i_magicka");
+	level.pic_stamina = gi.imageindex("i_stamina");
 	gi.imageindex ("help");
 	gi.imageindex ("field_3");
 
@@ -857,7 +892,9 @@ void SP_worldspawn (edict_t *ent)
 
 	snd_fry = gi.soundindex ("player/fry.wav");	// standing in lava / slime
 
-	PrecacheItem (FindItem ("Blaster"));
+	// TESMOD
+	//PrecacheItem (FindItem ("Blaster"));
+	PrecacheItem(FindItem("Hands"));
 
 	gi.soundindex ("player/lava1.wav");
 	gi.soundindex ("player/lava2.wav");

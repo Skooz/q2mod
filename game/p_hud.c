@@ -314,6 +314,7 @@ void HelpComputer (edict_t *ent)
 		sk = "hard+";
 
 	// send the layout
+	/*
 	Com_sprintf (string, sizeof(string),
 		"xv 32 yv 8 picn help "			// background
 		"xv 202 yv 12 string2 \"%s\" "		// skill
@@ -329,6 +330,25 @@ void HelpComputer (edict_t *ent)
 		level.killed_monsters, level.total_monsters, 
 		level.found_goals, level.total_goals,
 		level.found_secrets, level.total_secrets);
+	*/
+
+	// TESMOD
+
+	Com_sprintf(string, sizeof(string),
+		"xv 32 yv 8 picn help "			// background
+		"xv 202 yv 12 string2 \"%s\" "		// skill
+		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
+		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
+		"xv 50 yv 164 string2 \" HP        STAM     MAGICKA\" "
+		"xv 50 yv 172 string2 \"%3i/%3i   %i/%i    %i/%i\" ",
+		sk,
+		level.level_name,
+		game.helpmessage1,
+		game.helpmessage2,
+		ent->health, ent->max_health,
+		ent->stamina, ent->max_stamina,
+		ent->magicka, ent->max_magicka);
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);
@@ -385,6 +405,20 @@ void G_SetStats (edict_t *ent)
 	//
 	ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health;
+
+	// TESMOD
+
+	//
+	// magicka
+	//
+	ent->client->ps.stats[STAT_MAGICKA_ICON] = level.pic_magicka;
+	ent->client->ps.stats[STAT_MAGICKA] = ent->magicka;
+
+	//
+	// stamina
+	//
+	ent->client->ps.stats[STAT_STAMINA_ICON] = level.pic_stamina;
+	ent->client->ps.stats[STAT_STAMINA] = ent->stamina;
 
 	//
 	// ammo

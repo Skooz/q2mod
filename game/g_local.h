@@ -324,6 +324,8 @@ typedef struct
 	int			sound2_entity_framenum;
 
 	int			pic_health;
+	int			pic_magicka; // TESMOD
+	int			pic_stamina;
 
 	int			total_secrets;
 	int			found_secrets;
@@ -499,6 +501,8 @@ extern	int	body_armor_index;
 #define MOD_HIT				32
 #define MOD_TARGET_BLASTER	33
 #define MOD_FRIENDLY_FIRE	0x8000000
+// TESMOD
+#define MOD_PUNCH    34
 
 extern	int	meansOfDeath;
 
@@ -839,6 +843,17 @@ typedef struct
 	// values saved and restored from edicts when changing levels
 	int			health;
 	int			max_health;
+	// TESMOD
+	int			stamina;
+	int			max_stamina;
+	int			magicka;
+	int			max_magicka;
+	int			magicka_regen;
+	int			magicka_degen;
+	int			stamina_regen;
+	int			stamina_degen;
+	int			hasteToggle;
+
 	int			savedFlags;
 
 	int			selected_item;
@@ -939,6 +954,9 @@ struct gclient_s
 	qboolean	anim_run;
 
 	// powerup timers
+	// TESMOD
+	float		invisible_framenum;
+	float		armor_framenum;
 	float		quad_framenum;
 	float		invincible_framenum;
 	float		breather_framenum;
@@ -1053,6 +1071,18 @@ struct edict_s
 
 	int			health;
 	int			max_health;
+	
+	// TESMOD
+	int			stamina;
+	int			max_stamina;
+	int			magicka;
+	int			max_magicka;
+	int			magicka_regen;
+	int			magicka_degen;
+	int			stamina_regen;
+	int			stamina_degen;
+	int			hasteToggle;
+
 	int			gib_health;
 	int			deadflag;
 	qboolean	show_hostile;

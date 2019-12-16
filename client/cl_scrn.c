@@ -1125,6 +1125,46 @@ void SCR_ExecuteLayoutString (char *s)
 			continue;
 		}
 
+		if (!strcmp(token, "mnum"))
+		{	// magicka number
+			int		color;
+
+			width = 3;
+			value = cl.frame.playerstate.stats[STAT_MAGICKA];
+			if (value > 25)
+				color = 0;	// green
+			else if (value > 0)
+				color = (cl.frame.serverframe >> 2) & 1;		// flash
+			else
+				color = 1;
+
+			if (cl.frame.playerstate.stats[STAT_FLASHES] & 1)
+				re.DrawPic(x, y, "field_3");
+
+			SCR_DrawField(x, y, color, width, value);
+			continue;
+		}
+
+		if (!strcmp(token, "snum"))
+		{	// stamina
+			int		color;
+
+			width = 3;
+			value = cl.frame.playerstate.stats[STAT_STAMINA];
+			if (value > 25)
+				color = 0;	// green
+			else if (value > 0)
+				color = (cl.frame.serverframe >> 2) & 1;		// flash
+			else
+				color = 1;
+
+			if (cl.frame.playerstate.stats[STAT_FLASHES] & 1)
+				re.DrawPic(x, y, "field_3");
+
+			SCR_DrawField(x, y, color, width, value);
+			continue;
+		}
+
 		if (!strcmp(token, "anum"))
 		{	// ammo number
 			int		color;

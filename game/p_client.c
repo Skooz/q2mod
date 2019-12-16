@@ -383,6 +383,11 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				message = "tried to invade";
 				message2 = "'s personal space";
 				break;
+			// TESMOD
+			case MOD_PUNCH:
+				message = "took";
+				message2 = "'s fist in the face";
+				break;
 			}
 			if (message)
 			{
@@ -417,10 +422,12 @@ void TossClientWeapon (edict_t *self)
 	if (!deathmatch->value)
 		return;
 
+	// TESMOD
 	item = self->client->pers.weapon;
 	if (! self->client->pers.inventory[self->client->ammo_index] )
 		item = NULL;
-	if (item && (strcmp (item->pickup_name, "Blaster") == 0))
+	//if (item && (strcmp (item->pickup_name, "Blaster") == 0))
+	if (item && (strcmp(item->pickup_name, "Hands") == 0))
 		item = NULL;
 
 	if (!((int)(dmflags->value) & DF_QUAD_DROP))
@@ -610,7 +617,10 @@ void InitClientPersistant (gclient_t *client)
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
-	item = FindItem("Blaster");
+
+	//TESMOD
+	//item = FindItem("Blaster");
+	item = FindItem("Hands");
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 1;
 
@@ -618,6 +628,17 @@ void InitClientPersistant (gclient_t *client)
 
 	client->pers.health			= 100;
 	client->pers.max_health		= 100;
+
+	//TESMOD
+	client->pers.magicka		= 100;
+	client->pers.max_magicka	= 100;
+	client->pers.magicka_regen	= 2;
+	client->pers.magicka_degen	= 0;
+
+	client->pers.stamina		= 100;
+	client->pers.max_stamina	= 100;
+	client->pers.stamina_regen	= 2;
+	client->pers.stamina_degen	= 0;
 
 	client->pers.max_bullets	= 200;
 	client->pers.max_shells		= 100;
@@ -667,8 +688,19 @@ void SaveClientData (void)
 
 void FetchClientEntData (edict_t *ent)
 {
-	ent->health = ent->client->pers.health;
-	ent->max_health = ent->client->pers.max_health;
+	ent->health		 = ent->client->pers.health;
+	ent->max_health  = ent->client->pers.max_health;
+
+	ent->magicka	 = ent->client->pers.magicka;
+	ent->max_magicka = ent->client->pers.max_magicka;
+	ent->magicka_regen = ent->client->pers.magicka_regen;
+	ent->magicka_degen = ent->client->pers.magicka_degen;
+
+	ent->stamina	 = ent->client->pers.stamina;
+	ent->max_stamina = ent->client->pers.max_stamina;
+	ent->stamina_regen = ent->client->pers.stamina_regen;
+	ent->stamina_degen = ent->client->pers.stamina_degen;
+
 	ent->flags |= ent->client->pers.savedFlags;
 	if (coop->value)
 		ent->client->resp.score = ent->client->pers.score;
@@ -1802,4 +1834,66 @@ void ClientBeginServerFrame (edict_t *ent)
 			PlayerTrail_Add (ent->s.old_origin);
 
 	client->latched_buttons = 0;
+
+	// TESMOD
+
+	// Should we define a regeneration rate to also grow?
+	
+	// Tiers
+	/*
+	if (ent->max_stamina >= 200)
+	{
+		ent->stamina_regen *= 2;
+	}
+	*/
+
+	// ========================
+	// Attribute Regeneration
+	// Get 'em back! With time.
+	// ========================
+	// Magicka regen
+	if (ent->magicka < ent->max_magicka)
+	{
+		if (level.framenum % 5 == 0)
+		{
+			ent->magicka += ent->magicka_regen;
+		}
+	}
+	// Stamina regen
+	if (ent->stamina < ent->max_stamina)
+	{
+		if (level.framenum % 5 == 0)
+		{
+			ent->stamina += ent->stamina_regen;
+		}
+	}
+	// ========================
+	// Attribute Degeneration
+	// We're channeling spells!
+	// ========================
+	// Magicka degen
+	if (ent->magicka_degen > 0) // Don't bother unless we're draining.
+	{
+		if ((ent->flags & FL_NOTARGET) && ent->magicka <= 0) // Stop invis if we hit zero.
+		{
+			Cmd_SpellInvis_f(ent);
+		}
+		else if (level.framenum % 5 == 0)
+		{
+			ent->magicka -= ent->magicka_degen;
+		}
+	}
+	
+	// Stamina degen
+	if (ent->stamina_degen > 0) // Don't bother unless we're draining.
+	{
+		if (ent->hasteToggle == 1 && ent->stamina <= 0) // Stop haste if we hit zero.
+		{
+			Cmd_SpellHaste_f(ent);
+		}
+		else if (level.framenum % 5 == 0)
+		{
+			ent->stamina -= ent->stamina_degen;
+		}
+	}
 }

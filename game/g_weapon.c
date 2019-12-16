@@ -649,7 +649,6 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	gi.linkentity (rocket);
 }
 
-
 /*
 =================
 fire_rail
@@ -913,4 +912,109 @@ void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, f
 		check_dodge (self, bfg->s.origin, dir, speed);
 
 	gi.linkentity (bfg);
+}
+
+
+/*
+======
+vectoangles2 - this is duplicated in the game DLL, but I need it here.
+======
+*/
+void vectoangles2(vec3_t value1, vec3_t angles)
+{
+	float	forward;
+	float	yaw, pitch;
+
+	if (value1[1] == 0 && value1[0] == 0)
+	{
+		yaw = 0;
+		if (value1[2] > 0)
+			pitch = 90;
+		else
+			pitch = 270;
+	}
+	else
+	{
+		// PMM - fixed to correct for pitch of 0
+		if (value1[0])
+			yaw = (atan2(value1[1], value1[0]) * 180 / M_PI);
+		else if (value1[1] > 0)
+			yaw = 90;
+		else
+			yaw = 270;
+
+		if (yaw < 0)
+			yaw += 360;
+
+		forward = sqrt(value1[0] * value1[0] + value1[1] * value1[1]);
+		pitch = (atan2(value1[2], forward) * 180 / M_PI);
+		if (pitch < 0)
+			pitch += 360;
+	}
+
+	angles[PITCH] = -pitch;
+	angles[YAW] = yaw;
+	angles[ROLL] = 0;
+}
+
+
+// TESMOD
+/*
+/*
+==================
+Fire_Punch
+
+Code from: https://www.moddb.com/games/quake-2/tutorials/adding-a-new-weapon-melee
+==================
+*/
+
+void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, int kick, int quiet, int mod)
+{
+	vec3_t		forward, right, up;
+	vec3_t		v;
+	vec3_t		point;
+	trace_t		tr;
+	int stamDrain = 10;
+
+	vectoangles2(aim, v);                   
+	AngleVectors(v, forward, right, up);
+	VectorNormalize(forward);      
+	VectorMA(start, reach, forward, point);
+
+	// Apply stamina drains / growth.
+	// Base damage on stamina?
+	if (self->stamina >= stamDrain)
+		self->stamina -= stamDrain;
+	else
+		return;
+	self->max_stamina += 1;
+
+	// See if the hit connects
+	tr = gi.trace(start, NULL, NULL, point, self, MASK_SHOT);
+	if (tr.fraction == 1.0)
+	{
+		gi.sound (self, CHAN_WEAPON, gi.soundindex ("weapons/swish.wav"), 1, ATTN_NORM, 0); // When the weapon doesn't hit!
+		return;
+	}
+
+	if (tr.ent->takedamage == DAMAGE_YES || tr.ent->takedamage == DAMAGE_AIM) // Make sure they took damage
+	{
+		VectorMA(self->velocity, 75, forward, self->velocity); // Pull the player forward if you do damage
+		VectorMA(self->velocity, 75, up, self->velocity); // Pull up a tad bit. You can't slide;)
+
+		// do the damage
+		// FIXME - make the damage appear at right spot and direction
+		T_Damage(tr.ent, self, self, vec3_origin, tr.ent->s.origin, vec3_origin, damage, kick / 2, DAMAGE_ENERGY, mod);
+		gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/slice.wav"), 1, ATTN_IDLE, 0); // Hit enemy sound 
+	}
+	else
+	{
+		VectorScale(tr.plane.normal, 256, point);
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_SPARKS); //make sparks, not gunshot..
+		gi.WritePosition(tr.endpos);
+		gi.WriteDir(point);
+		gi.multicast(tr.endpos, MULTICAST_PVS);
+		gi.sound(self, CHAN_AUTO, gi.soundindex("weapons/wallbap.wav"), 1, ATTN_NORM, 0);  // Hit wall sound
+	}
 }
