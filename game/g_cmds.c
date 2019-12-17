@@ -963,7 +963,7 @@ void Cmd_SpellReplenish_f(edict_t *ent)
 			ent->stamina += spellCost/2;	// Add stamina
 			if (ent->stamina >= ent->max_stamina) ent->stamina = ent->max_stamina; // If we over-heal, then correct.
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/l_health.wav"), 1, ATTN_NORM, 0); // Play a sound!
-			msg = "You have been healed!\n"; // Send a message!
+			msg = "You have been replenished!\n"; // Send a message!
 			ent->max_magicka += 2; // Increase magicka for growth.
 		}
 		else
@@ -986,7 +986,7 @@ void Cmd_SpellHaste_f(edict_t *ent)
 {
 	char	*msg;
 	int		spellCost = 15; // Initial magicka cost
-	int		stamDrain = 4;	// Stamina upkeep cost
+	int		stamDrain = 5;	// Stamina upkeep cost
 
 	if (ent->hasteToggle == 0)
 	{
@@ -1043,7 +1043,7 @@ Uses the attack spell. Boosts attack.
 void Cmd_SpellAttack_f(edict_t *ent)
 {
 	char	*msg;
-	int spellCost = 25;
+	int		spellCost = 25;
 	vec3_t	offset, start;
 	vec3_t	forward, right;
 	int		damage = 25;
@@ -1073,24 +1073,32 @@ void Cmd_SpellAttack_f(edict_t *ent)
 
 /*
 ==================
-Cmd_SpellConjure_f
+Cmd_SpellCharm_f
 
-Summon an ally to fight alongside you!
-
-Deprecated?
+Make that boi friendly.
 ==================
 */
-void Cmd_SpellConjure_f(edict_t *ent)
+void Cmd_SpellCharm_f(edict_t *ent)
 {
 	char	*msg;
-	int spellCost = 50;
+	int		spellCost = 50;
+	trace_t	tr;
+	vec3_t	start;
+	vec3_t	forward, right;
+	vec3_t	offset;
+	vec3_t	point;
 
 	if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
 	{
 		ent->magicka -= spellCost; // Remove magicka
-		// Spawn a boi.
-		msg = "You summoned an ally!\n";
-		ent->max_magicka += 2; // Increase magicka for growth.
+			AngleVectors(ent->client->v_angle, forward, right, NULL);
+			VectorScale(forward, -2, ent->client->kick_origin);
+			ent->client->kick_angles[0] = -1;
+			VectorSet(offset, 8, 8, ent->viewheight - 8);
+			P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+		fire_charm(ent, start, forward);
+		msg = "You threw a charm!\n";
+		ent->max_magicka += 5; // Increase magicka for growth.
 	}
 	else
 	{
@@ -1112,7 +1120,7 @@ Makes use of notarget because it's the same thing, but we're checking different 
 void Cmd_SpellInvis_f(edict_t *ent)
 {
 	char	*msg;
-	int magDrain = 7; // This is a channeled spell, so no cost.
+	int magDrain = 5; // This is a channeled spell, so no cost.
 
 	if (!(ent->flags & FL_NOTARGET)) // If we're not invisible...
 	{
@@ -1231,8 +1239,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_SpellHaste_f(ent);
 	else if (Q_stricmp(cmd, "SpellAttack") == 0)
 		Cmd_SpellAttack_f(ent);
-	else if (Q_stricmp(cmd, "SpellConjure") == 0)
-		Cmd_SpellConjure_f(ent);
+	else if (Q_stricmp(cmd, "SpellCharm") == 0)
+		Cmd_SpellCharm_f(ent);
 	else if (Q_stricmp(cmd, "SpellInvis") == 0)
 		Cmd_SpellInvis_f(ent);
 	else	// anything that doesn't match a command will be a chat

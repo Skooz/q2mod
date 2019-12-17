@@ -39,6 +39,7 @@ static int	sound_death_light;
 static int	sound_death;
 static int	sound_death_ss;
 static int	sound_cock;
+qboolean isFriendly = true;
 
 
 void soldier_idle (edict_t *self)

@@ -386,6 +386,38 @@ void FoundTarget (edict_t *self)
 	self->monsterinfo.run (self);
 }
 
+// Monsters can be enemies too!
+// https://www.moddb.com/games/quake-2/tutorials/monsters-fighting-each-other
+// Similar to Medic's FindDeadMonster code.
+edict_t *FindMonster(edict_t *self)
+{
+	edict_t	*ent = NULL;
+	edict_t	*best = NULL;
+
+	while ((ent = findradius(ent, self->s.origin, 1024)) != NULL)
+	{
+		if (ent == self)
+			continue;
+		if (!(ent->svflags & SVF_MONSTER))
+			continue;
+		if (!ent->health)
+			continue;
+		if (ent->health < 1)
+			continue;
+		if (!visible(self, ent))
+			continue;
+		if (!best)
+		{
+			best = ent;
+			continue;
+		}
+		if (ent->max_health <= best->max_health)
+			continue;
+		best = ent;
+	}
+
+	return best;
+}
 
 /*
 ===========
@@ -402,6 +434,8 @@ player.
 To avoid spending too much time, only a single client (or fakeclient) is
 checked each frame.  This means multi player games will have slightly
 slower noticing monsters.
+
+https://www.moddb.com/games/quake-2/tutorials/monsters-fighting-each-other
 ============
 */
 qboolean FindTarget (edict_t *self)
@@ -409,6 +443,7 @@ qboolean FindTarget (edict_t *self)
 	edict_t		*client;
 	qboolean	heardit;
 	int			r;
+	edict_t		*monster;
 
 	if (self->monsterinfo.aiflags & AI_GOOD_GUY)
 	{
@@ -421,6 +456,20 @@ qboolean FindTarget (edict_t *self)
 		//FIXME look for monsters?
 		return false;
 	}
+
+
+	//Look for monsters!
+	if (self->goCrazy)
+	{
+		monster = FindMonster(self);
+		if (monster)
+		{
+			self->enemy = monster;
+			FoundTarget(self);
+			return true;
+		}
+	}
+
 
 	// if we're going to a combat point, just proceed
 	if (self->monsterinfo.aiflags & AI_COMBAT_POINT)
@@ -463,8 +512,10 @@ qboolean FindTarget (edict_t *self)
 	if (!client->inuse)
 		return false;
 
-	if (client == self->enemy)
+	if (client == self->enemy && !self->goCrazy)
 		return true;	// JDC false;
+	else if (client == self->enemy && self->goCrazy)
+		return false;
 
 	if (client->client)
 	{
@@ -574,7 +625,8 @@ qboolean FindTarget (edict_t *self)
 //
 // got one
 //
-	FoundTarget (self);
+	if (!self->goCrazy)
+		FoundTarget (self);
 
 	if (!(self->monsterinfo.aiflags & AI_SOUND_TARGET) && (self->monsterinfo.sight))
 		self->monsterinfo.sight (self, self->enemy);

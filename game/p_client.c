@@ -426,8 +426,8 @@ void TossClientWeapon (edict_t *self)
 	item = self->client->pers.weapon;
 	if (! self->client->pers.inventory[self->client->ammo_index] )
 		item = NULL;
-	//if (item && (strcmp (item->pickup_name, "Blaster") == 0))
-	if (item && (strcmp(item->pickup_name, "Hands") == 0))
+	if (item && (strcmp (item->pickup_name, "Blaster") == 0))
+	//if (item && (strcmp(item->pickup_name, "Hands") == 0))
 		item = NULL;
 
 	if (!((int)(dmflags->value) & DF_QUAD_DROP))
@@ -619,8 +619,9 @@ void InitClientPersistant (gclient_t *client)
 
 
 	//TESMOD
-	//item = FindItem("Blaster");
-	item = FindItem("Hands");
+	item = FindItem("Blaster");
+	//item = FindItem("Hands");
+
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 1;
 
@@ -634,11 +635,12 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_magicka	= 100;
 	client->pers.magicka_regen	= 2;
 	client->pers.magicka_degen	= 0;
-
 	client->pers.stamina		= 100;
 	client->pers.max_stamina	= 100;
 	client->pers.stamina_regen	= 2;
 	client->pers.stamina_degen	= 0;
+	client->pers.staminaTier	= 0;
+	client->pers.magickaTier	= 0;
 
 	client->pers.max_bullets	= 200;
 	client->pers.max_shells		= 100;
@@ -700,6 +702,9 @@ void FetchClientEntData (edict_t *ent)
 	ent->max_stamina = ent->client->pers.max_stamina;
 	ent->stamina_regen = ent->client->pers.stamina_regen;
 	ent->stamina_degen = ent->client->pers.stamina_degen;
+
+	ent->staminaTier = ent->client->pers.staminaTier;
+	ent->magickaTier = ent->client->pers.magickaTier;
 
 	ent->flags |= ent->client->pers.savedFlags;
 	if (coop->value)
@@ -1840,12 +1845,17 @@ void ClientBeginServerFrame (edict_t *ent)
 	// Should we define a regeneration rate to also grow?
 	
 	// Tiers
+	
 	/*
-	if (ent->max_stamina >= 200)
+	if (ent->staminaTier = 0 && ent->max_stamina % 150 == 0)
 	{
-		ent->stamina_regen *= 2;
+		ent->staminaTier++;
+		ent->stamina_regen++;
 	}
+	else if (ent->staminaTier = 1 && ent->max_stamina % 150)
 	*/
+
+	
 
 	// ========================
 	// Attribute Regeneration
@@ -1856,7 +1866,8 @@ void ClientBeginServerFrame (edict_t *ent)
 	{
 		if (level.framenum % 5 == 0)
 		{
-			ent->magicka += ent->magicka_regen;
+			//ent->magicka += ent->magicka_regen;
+			ent->magicka += (ent->max_magicka / 50);
 		}
 	}
 	// Stamina regen
@@ -1864,7 +1875,8 @@ void ClientBeginServerFrame (edict_t *ent)
 	{
 		if (level.framenum % 5 == 0)
 		{
-			ent->stamina += ent->stamina_regen;
+			//ent->stamina += ent->stamina_regen;
+			ent->stamina += (ent->max_stamina / 50);
 		}
 	}
 	// ========================

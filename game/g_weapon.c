@@ -960,7 +960,6 @@ void vectoangles2(vec3_t value1, vec3_t angles)
 
 // TESMOD
 /*
-/*
 ==================
 Fire_Punch
 
@@ -974,20 +973,11 @@ void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, 
 	vec3_t		v;
 	vec3_t		point;
 	trace_t		tr;
-	int stamDrain = 10;
 
 	vectoangles2(aim, v);                   
 	AngleVectors(v, forward, right, up);
 	VectorNormalize(forward);      
-	VectorMA(start, reach, forward, point);
-
-	// Apply stamina drains / growth.
-	// Base damage on stamina?
-	if (self->stamina >= stamDrain)
-		self->stamina -= stamDrain;
-	else
-		return;
-	self->max_stamina += 1;
+	VectorMA(start, reach, forward, point);	
 
 	// See if the hit connects
 	tr = gi.trace(start, NULL, NULL, point, self, MASK_SHOT);
@@ -1017,4 +1007,70 @@ void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, 
 		gi.multicast(tr.endpos, MULTICAST_PVS);
 		gi.sound(self, CHAN_AUTO, gi.soundindex("weapons/wallbap.wav"), 1, ATTN_NORM, 0);  // Hit wall sound
 	}
+}
+
+/*
+=================
+fire_charm
+Make dat boi like you.
+=================
+*/
+void fire_charm(edict_t *self, vec3_t start, vec3_t aimdir)
+{
+	vec3_t		from;
+	vec3_t		end;
+	trace_t		tr;
+	edict_t		*ignore;
+	int			mask;
+	qboolean	water;
+
+	VectorMA(start, 8192, aimdir, end);
+	VectorCopy(start, from);
+	ignore = self;
+	water = false;
+	mask = MASK_SHOT | CONTENTS_SLIME | CONTENTS_LAVA;
+	while (ignore)
+	{
+		tr = gi.trace(from, NULL, NULL, end, ignore, mask);
+
+		if (tr.contents & (CONTENTS_SLIME | CONTENTS_LAVA))
+		{
+			mask &= ~(CONTENTS_SLIME | CONTENTS_LAVA);
+			water = true;
+		}
+		else
+		{
+			if ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client))
+				ignore = tr.ent;
+			else
+				ignore = NULL;
+
+			if ((tr.ent != self) && (tr.ent->takedamage))
+			{
+				tr.ent->goCrazy = 1;
+				FindTarget(tr.ent);
+			}
+		}
+
+		VectorCopy(tr.endpos, from);
+	}
+
+	// send gun puff / flash
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_RAILTRAIL);
+	gi.WritePosition(start);
+	gi.WritePosition(tr.endpos);
+	gi.multicast(self->s.origin, MULTICAST_PHS);
+	//	gi.multicast (start, MULTICAST_PHS);
+	if (water)
+	{
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_RAILTRAIL);
+		gi.WritePosition(start);
+		gi.WritePosition(tr.endpos);
+		gi.multicast(tr.endpos, MULTICAST_PHS);
+	}
+
+	if (self->client)
+		PlayerNoise(self, tr.endpos, PNOISE_IMPACT);
 }

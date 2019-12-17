@@ -893,8 +893,8 @@ void SP_worldspawn (edict_t *ent)
 	snd_fry = gi.soundindex ("player/fry.wav");	// standing in lava / slime
 
 	// TESMOD
-	//PrecacheItem (FindItem ("Blaster"));
-	PrecacheItem(FindItem("Hands"));
+	PrecacheItem (FindItem ("Blaster"));
+	//PrecacheItem(FindItem("Hands"));
 
 	gi.soundindex ("player/lava1.wav");
 	gi.soundindex ("player/lava2.wav");

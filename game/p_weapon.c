@@ -131,14 +131,16 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 
 	other->client->pers.inventory[index]++;
 
+	
 	if (!(ent->spawnflags & DROPPED_ITEM) )
 	{
-		// give them some ammo with it
+		/* do NOT give them some ammo with it
 		ammo = FindItem (ent->item->ammo);
 		if ( (int)dmflags->value & DF_INFINITE_AMMO )
 			Add_Ammo (other, ammo, 1000);
 		else
 			Add_Ammo (other, ammo, ammo->quantity);
+		*/
 
 		if (! (ent->spawnflags & DROPPED_PLAYER_ITEM) )
 		{
@@ -270,8 +272,8 @@ void NoAmmoWeaponChange (edict_t *ent)
 		return;
 	}
 	//TESMOD
-	//ent->client->newweapon = FindItem ("blaster");
-	ent->client->newweapon = FindItem("Hands");
+	ent->client->newweapon = FindItem ("blaster");
+	//ent->client->newweapon = FindItem("Hands");
 }
 
 /*
@@ -1450,9 +1452,23 @@ void Null_Fire(edict_t *ent)
 	vec3_t		forward, right;
 	vec3_t		angles;
 	int			damage = 15; // Base damage
-	int			range = 45;	 // Base range
-	int			kick = 2;    // Recoil?
+	int			range = 50;	 // Base range
+	int			kick = 2;    // Recoil? Not used?
+	int			stamDrain = 10;
 	vec3_t		offset;
+
+	// Apply stamina drains / growth.
+	// Base damage on stamina?
+	if (ent->stamina >= stamDrain)
+	{
+		ent->stamina -= stamDrain;
+		ent->max_stamina += 1;
+	}
+	else
+	{
+		damage /= 2;
+		ent->stamina = 0;
+	}
 
 	if (ent->client->ps.gunframe == 11)
 	{

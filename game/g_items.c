@@ -504,8 +504,8 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 	// TESMOD
 	if (weapon && !oldcount)
 	{
-		//if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("blaster") ) )
-		if (other->client->pers.weapon != ent->item && (!deathmatch->value || other->client->pers.weapon == FindItem("Hands")))
+		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("blaster") ) )
+		//if (other->client->pers.weapon != ent->item && (!deathmatch->value || other->client->pers.weapon == FindItem("Hands")))
 			other->client->newweapon = ent->item;
 	}
 
@@ -1322,10 +1322,10 @@ always owned, never in the world
 		NULL,
 		Use_Weapon,
 		NULL,
-		Weapon_Blaster,
+		Weapon_Null,//Weapon_Blaster,
 		"misc/w_pkup.wav",
 		NULL, 0,
-		"models/weapons/v_blast/tris.md2",
+		"models/weapons/test/swordq2.md2",
 /* icon */		"w_blaster",
 /* pickup */	"Blaster",
 		0,
@@ -1335,7 +1335,7 @@ always owned, never in the world
 		WEAP_BLASTER,
 		NULL,
 		0,
-/* precache */ "weapons/blastf1a.wav misc/lasfly.wav"
+/* precache */ ""
 	},
 
 /*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1344,21 +1344,21 @@ always owned, never in the world
 		"weapon_shotgun", 
 		Pickup_Weapon,
 		Use_Weapon,
-		Drop_Weapon,
-		Weapon_Shotgun,
+		NULL,
+		Weapon_Null,//Weapon_Shotgun,
 		"misc/w_pkup.wav",
-		"models/weapons/g_shotg/tris.md2", EF_ROTATE,
-		"models/weapons/v_shotg/tris.md2",
+		"models/weapons/sword2/sword2q2.md2", EF_ROTATE,
+		"models/weapons/sword2/sword2q2.md2",
 /* icon */		"w_shotgun",
 /* pickup */	"Shotgun",
 		0,
-		1,
-		"Shells",
+		0,
+		NULL,
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_SHOTGUN,
 		NULL,
 		0,
-/* precache */ "weapons/shotgf1b.wav weapons/shotgr1b.wav"
+/* precache */ ""
 	},
 
 /*QUAKED weapon_supershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1367,16 +1367,16 @@ always owned, never in the world
 		"weapon_supershotgun", 
 		Pickup_Weapon,
 		Use_Weapon,
-		Drop_Weapon,
-		Weapon_SuperShotgun,
+		NULL,
+		Weapon_Null,//Weapon_SuperShotgun,
 		"misc/w_pkup.wav",
-		"models/weapons/g_shotg2/tris.md2", EF_ROTATE,
-		"models/weapons/v_shotg2/tris.md2",
+		"models/weapons/sword3/swordq3.md2", EF_ROTATE,
+		"models/weapons/sword3/swordq3.md2",
 /* icon */		"w_sshotgun",
 /* pickup */	"Super Shotgun",
 		0,
-		2,
-		"Shells",
+		0,
+		NULL,
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_SUPERSHOTGUN,
 		NULL,
@@ -1391,15 +1391,15 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Machinegun,
+		Weapon_Null,//Weapon_Machinegun,
 		"misc/w_pkup.wav",
-		"models/weapons/g_machn/tris.md2", EF_ROTATE,
-		"models/weapons/v_machn/tris.md2",
+		"models/weapons/sword4/sword4q2.md2", EF_ROTATE,
+		"models/weapons/sword4/sword4q2.md2",
 /* icon */		"w_machinegun",
 /* pickup */	"Machinegun",
 		0,
-		1,
-		"Bullets",
+		0,
+		NULL,
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_MACHINEGUN,
 		NULL,
@@ -1414,15 +1414,15 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Chaingun,
+		Weapon_Null,//Weapon_Chaingun,
 		"misc/w_pkup.wav",
-		"models/weapons/g_chain/tris.md2", EF_ROTATE,
-		"models/weapons/v_chain/tris.md2",
+		"models/weapons/knife2/knifeq2.md2", EF_ROTATE,
+		"models/weapons/knife2/knifeq2.md2",
 /* icon */		"w_chaingun",
 /* pickup */	"Chaingun",
 		0,
-		1,
-		"Bullets",
+		0,
+		NULL,
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_CHAINGUN,
 		NULL,
