@@ -49,3 +49,16 @@ A melee & spellcasting mod for Quake 2.
     * ***Succesful attacks launch enemies very far, very fast.***
 * **Loot drops**
   * Special swords 6-10 randomly drop from soldiers.
+  
+## Usage / Additional Info
+
+* Spells are linked to commands
+ * SpellHeal
+ * SpellReplenish
+ * SpellHaste
+ * SpellAttack
+ * SpellCharm
+ * SpellInvis
+* Attacking with insufficient stamina will do 1/2 damage, and will not level your total stamina.
+* Magicka & Stamina regen & degen are handled separately; technically, you can reach a point where invis and haste can be on permanently, albeit with slowed regeneration.
+* Magicka & Stamina regen scales infinitely.
