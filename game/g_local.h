@@ -857,6 +857,7 @@ typedef struct
 	int			goCrazy;		// Flag for charm/frenzy player
 	int			staminaTier;
 	int			magickaTier;
+	int isClient;
 
 	int			savedFlags;
 
@@ -958,8 +959,6 @@ struct gclient_s
 	qboolean	anim_run;
 
 	// powerup timers
-	// TESMOD
-	float		invisible_framenum;
 	float		armor_framenum;
 	float		quad_framenum;
 	float		invincible_framenum;
@@ -1090,6 +1089,7 @@ struct edict_s
 	int			goCrazy;		// Flag for charm/frenzy player
 	int			staminaTier;
 	int			magickaTier;
+	int isClient;
 
 	int			gib_health;
 	int			deadflag;

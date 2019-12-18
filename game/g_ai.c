@@ -468,6 +468,7 @@ qboolean FindTarget (edict_t *self)
 			FoundTarget(self);
 			return true;
 		}
+		return false;
 	}
 
 
@@ -625,7 +626,7 @@ qboolean FindTarget (edict_t *self)
 //
 // got one
 //
-	if (!self->goCrazy)
+	//if (!self->goCrazy)
 		FoundTarget (self);
 
 	if (!(self->monsterinfo.aiflags & AI_SOUND_TARGET) && (self->monsterinfo.sight))
@@ -860,6 +861,8 @@ qboolean ai_checkattack (edict_t *self, float dist)
 	{
 		hesDeadJim = true;
 	}
+	else if (self->enemy->isClient && self->goCrazy)
+		hesDeadJim = true;
 	else if (self->monsterinfo.aiflags & AI_MEDIC)
 	{
 		if (self->enemy->health > 0)

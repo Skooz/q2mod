@@ -1,14 +1,6 @@
-﻿Build started 12/17/2019 8:03:11 PM.
+﻿Build started 12/18/2019 3:34:00 AM.
      1>Project "C:\Users\zooki\IT266\q2mod\ref_gl\ref_gl.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W4 /WX- /O2 /Oy- /D NDEBUG /D WIN32 /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _WINDLL /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\release\\" /Fd".\release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt gl_mesh.c
-         gl_mesh.c
-     1>gl_mesh.c(188): warning C4127: conditional expression is constant
-     1>gl_mesh.c(242): warning C4127: conditional expression is constant
-     1>gl_mesh.c(327): warning C4127: conditional expression is constant
-     1>gl_mesh.c(306): warning C4100: 'posenum' : unreferenced formal parameter
-     1>gl_mesh.c(718): warning C4210: nonstandard extension used : function given file scope
-       Link:
+     1>Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\release\ref_gl.dll" /INCREMENTAL:NO /NOLOGO winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:".\ref_gl.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\..\release\ref_gl.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\release\ref_gl.lib" /MACHINE:X86 /SAFESEH /DLL .\release\gl_draw.obj
          .\release\gl_image.obj
          .\release\gl_light.obj
@@ -28,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.67
+Time Elapsed 00:00:00.24

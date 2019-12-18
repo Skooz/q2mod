@@ -650,6 +650,8 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_cells		= 200;
 	client->pers.max_slugs		= 50;
 
+	client->pers.isClient = 1;
+
 	client->pers.connected = true;
 }
 
@@ -708,6 +710,8 @@ void FetchClientEntData (edict_t *ent)
 	ent->magickaTier = ent->client->pers.magickaTier;
 
 	ent->knowledge = ent->client->pers.knowledge;
+
+	ent->isClient = ent->client->pers.isClient;
 
 	ent->flags |= ent->client->pers.savedFlags;
 	if (coop->value)
