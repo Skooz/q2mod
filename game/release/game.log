@@ -1,7 +1,7 @@
-﻿Build started 12/17/2019 9:34:04 PM.
+﻿Build started 12/18/2019 12:38:38 AM.
      1>Project "C:\Users\zooki\IT266\q2mod\game\game.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Z7 /nologo /W4 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _WINDLL /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\release\\" /Fd".\release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt g_items.c
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Z7 /nologo /W4 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _WINDLL /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\release\\" /Fd".\release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt g_items.c g_weapon.c
          g_items.c
      1>g_items.c(45): warning C4211: nonstandard extension used : redefined extern to static
      1>g_items.c(46): warning C4211: nonstandard extension used : redefined extern to static
@@ -11,6 +11,11 @@
      1>g_items.c(767): warning C4100: 'plane' : unreferenced formal parameter
      1>g_items.c(898): warning C4100: 'activator' : unreferenced formal parameter
      1>g_items.c(898): warning C4100: 'other' : unreferenced formal parameter
+         g_weapon.c
+     1>g_weapon.c(455): warning C4100: 'plane' : unreferenced formal parameter
+     1>g_weapon.c(842): warning C4127: conditional expression is constant
+     1>g_weapon.c(1055): warning C4013: 'FindTarget' undefined; assuming extern returning int
+         Generating Code...
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1186,5): warning MSB8012: TargetPath(C:\Users\zooki\IT266\q2mod\game\.\..\release\game.dll) does not match the Linker's OutputFile property value (C:\Users\zooki\IT266\q2mod\release\gamex86.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1188,5): warning MSB8012: TargetName(game) does not match the Linker's OutputFile property value (gamex86). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
        Link:
@@ -68,4 +73,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.69
+Time Elapsed 00:00:00.56

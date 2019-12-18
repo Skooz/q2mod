@@ -905,9 +905,10 @@ void Cmd_PlayerList_f(edict_t *ent)
 Spells!
 
 SpellHeal
+SpellReplenish
 SpellHaste
 SpellAttack
-SpellConjure
+SpellCharm
 SpellInvis
 */
 
@@ -927,6 +928,12 @@ void Cmd_SpellHeal_f(edict_t *ent)
 	{
 		if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
 		{
+			if (ent->knowledge == 0)
+			{
+				ent->knowledge = 1;
+				char *info = "Your knowledge has increased; new spell learned: Replenish.\n";
+				gi.cprintf(ent, PRINT_MEDIUM, info);
+			}
 			ent->magicka -= spellCost;	// Remove magicka
 			ent->health += spellCost/2;	// Add health
 			if (ent->health >= ent->max_health) ent->health = ent->max_health; // If we over-heal, then correct.
@@ -959,6 +966,21 @@ void Cmd_SpellReplenish_f(edict_t *ent)
 	{
 		if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
 		{
+
+			// Knowledge check.
+			if (ent->knowledge == 1)
+			{
+				ent->knowledge = 2;
+				char *info = "Your knowledge has increased; new spell learned: Haste.\n";
+				gi.cprintf(ent, PRINT_MEDIUM, info);
+			}
+			else
+			{
+				char *info = "You do not have the knowledge to use Replenish.\n";
+				gi.cprintf(ent, PRINT_MEDIUM, info);
+				return;
+			}
+
 			ent->magicka -= spellCost;	// Remove magicka
 			ent->stamina += spellCost/2;	// Add stamina
 			if (ent->stamina >= ent->max_stamina) ent->stamina = ent->max_stamina; // If we over-heal, then correct.
@@ -988,10 +1010,26 @@ void Cmd_SpellHaste_f(edict_t *ent)
 	int		spellCost = 15; // Initial magicka cost
 	int		stamDrain = 5;	// Stamina upkeep cost
 
+	
+
 	if (ent->hasteToggle == 0)
 	{
 		if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
 		{
+
+			if (ent->knowledge == 2)
+			{
+				ent->knowledge = 3;
+				char *info = "Your knowledge has increased; new spell learned: Fireball\n";
+				gi.cprintf(ent, PRINT_MEDIUM, info);
+			}
+			else if (ent->knowledge < 2)
+			{
+				char *info = "You do not have the knowledge to use Haste\n";
+				gi.cprintf(ent, PRINT_MEDIUM, info);
+				return;
+			}
+
 			ent->hasteToggle	 = 1;			// Toggle effect
 			ent->magicka		-= spellCost;	// Remove magicka
 			ent->stamina_degen = stamDrain;			// Stamina degen
@@ -1052,6 +1090,20 @@ void Cmd_SpellAttack_f(edict_t *ent)
 
 	if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
 	{
+
+		if (ent->knowledge == 3)
+		{
+			ent->knowledge = 4;
+			char *info = "Your knowledge has increased; new spell learned: Charm.\n";
+			gi.cprintf(ent, PRINT_MEDIUM, info);
+		}
+		else if (ent->knowledge < 3)
+		{
+			char *info = "You do not have the knowledge to use Fireball\n";
+			gi.cprintf(ent, PRINT_MEDIUM, info);
+			return;
+		}
+
 		ent->magicka -= spellCost; // Remove magicka
 		AngleVectors(ent->client->v_angle, forward, right, NULL);
 		VectorScale(forward, -2, ent->client->kick_origin);
@@ -1090,6 +1142,20 @@ void Cmd_SpellCharm_f(edict_t *ent)
 
 	if (ent->magicka >= spellCost) // If we have enough remaining magicka, cast the spell.
 	{
+
+		if (ent->knowledge == 4)
+		{
+			ent->knowledge = 5;
+			char *info = "Your knowledge is maxed; new spell learned: Invisibility.\n";
+			gi.cprintf(ent, PRINT_MEDIUM, info);
+		}
+		else if (ent->knowledge < 4)
+		{
+			char *info = "You do not have the knowledge to use Charm\n";
+			gi.cprintf(ent, PRINT_MEDIUM, info);
+			return;
+		}
+
 		ent->magicka -= spellCost; // Remove magicka
 			AngleVectors(ent->client->v_angle, forward, right, NULL);
 			VectorScale(forward, -2, ent->client->kick_origin);
@@ -1121,6 +1187,13 @@ void Cmd_SpellInvis_f(edict_t *ent)
 {
 	char	*msg;
 	int magDrain = 5; // This is a channeled spell, so no cost.
+
+	if (ent->knowledge < 5)
+	{
+		char *info = "You do not have the knowledge to use Invisibility.\n";
+		gi.cprintf(ent, PRINT_MEDIUM, info);
+		return;
+	}
 
 	if (!(ent->flags & FL_NOTARGET)) // If we're not invisible...
 	{

@@ -641,6 +641,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.stamina_degen	= 0;
 	client->pers.staminaTier	= 0;
 	client->pers.magickaTier	= 0;
+	client->pers.knowledge		= 0;
 
 	client->pers.max_bullets	= 200;
 	client->pers.max_shells		= 100;
@@ -705,6 +706,8 @@ void FetchClientEntData (edict_t *ent)
 
 	ent->staminaTier = ent->client->pers.staminaTier;
 	ent->magickaTier = ent->client->pers.magickaTier;
+
+	ent->knowledge = ent->client->pers.knowledge;
 
 	ent->flags |= ent->client->pers.savedFlags;
 	if (coop->value)

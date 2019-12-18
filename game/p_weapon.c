@@ -990,7 +990,7 @@ void Weapon_Blaster_Fire (edict_t *ent)
 	vec3_t		angles;
 	vec3_t		offset;
 	int			damage = 15; // Base damage
-	int			range = 50;	 // Base range
+	int			range = 45;	 // Base range
 	int			kick = 200;    // Recoil? Not used?
 	int			stamDrain = 10;
 
@@ -1131,7 +1131,7 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 	int			damage = 30; // Base damage
 	int			range = 50;	 // Base range
 	int			kick = 200;    // Recoil? Not used?
-	int			stamDrain = 25;
+	int			stamDrain = 30;
 
 
 	// Apply stamina drains / growth.
@@ -1478,10 +1478,10 @@ void Chaingun_Fire (edict_t *ent)
 	vec3_t		forward, right;
 	vec3_t		angles;
 	vec3_t		offset;
-	int			damage		= 45; // Base damage
-	int			range		= 50;	 // Base range
+	int			damage		= 40; // Base damage
+	int			range		= 45;	 // Base range
 	int			kick		= 200;    // Recoil? Not used?
-	int			stamDrain	= 30;
+	int			stamDrain	= 15;
 
 
 	// Apply stamina drains / growth.

@@ -852,6 +852,7 @@ typedef struct
 	int			magicka_degen;
 	int			stamina_regen;
 	int			stamina_degen;
+	int			knowledge;
 	int			hasteToggle;	// Toggle for haste spell
 	int			goCrazy;		// Flag for charm/frenzy player
 	int			staminaTier;
@@ -1084,6 +1085,7 @@ struct edict_s
 	int			magicka_degen;
 	int			stamina_regen;
 	int			stamina_degen;
+	int			knowledge;
 	int			hasteToggle;	// Toggle for haste spell
 	int			goCrazy;		// Flag for charm/frenzy player
 	int			staminaTier;

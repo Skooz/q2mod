@@ -1046,31 +1046,16 @@ void fire_charm(edict_t *self, vec3_t start, vec3_t aimdir)
 	ignore = self;
 	water = false;
 	mask = MASK_SHOT | CONTENTS_SLIME | CONTENTS_LAVA;
-	while (ignore)
+
+	tr = gi.trace(from, NULL, NULL, end, ignore, mask);
+
+	if ((tr.ent != self) && (tr.ent->takedamage))
 	{
-		tr = gi.trace(from, NULL, NULL, end, ignore, mask);
-
-		if (tr.contents & (CONTENTS_SLIME | CONTENTS_LAVA))
-		{
-			mask &= ~(CONTENTS_SLIME | CONTENTS_LAVA);
-			water = true;
-		}
-		else
-		{
-			if ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client))
-				ignore = tr.ent;
-			else
-				ignore = NULL;
-
-			if ((tr.ent != self) && (tr.ent->takedamage))
-			{
-				tr.ent->goCrazy = 1;	// Tell 'em to go nuts.
-				FindTarget(tr.ent);		// And find a new target, which isn't us.
-			}
-		}
-
-		VectorCopy(tr.endpos, from);
+		tr.ent->goCrazy = 1;	// Tell 'em to go nuts.
+		FindTarget(tr.ent);		// And find a new target, which hopefully isn't us.
 	}
+
+	VectorCopy(tr.endpos, from);
 
 	// send gun puff / flash
 	gi.WriteByte(svc_temp_entity);
@@ -1079,14 +1064,6 @@ void fire_charm(edict_t *self, vec3_t start, vec3_t aimdir)
 	gi.WritePosition(tr.endpos);
 	gi.multicast(self->s.origin, MULTICAST_PHS);
 	//	gi.multicast (start, MULTICAST_PHS);
-	if (water)
-	{
-		gi.WriteByte(svc_temp_entity);
-		gi.WriteByte(TE_RAILTRAIL);
-		gi.WritePosition(start);
-		gi.WritePosition(tr.endpos);
-		gi.multicast(tr.endpos, MULTICAST_PHS);
-	}
 
 	if (self->client)
 		PlayerNoise(self, tr.endpos, PNOISE_IMPACT);

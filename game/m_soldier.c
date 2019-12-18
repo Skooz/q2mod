@@ -1142,9 +1142,24 @@ mframe_t soldier_frames_death6 [] =
 };
 mmove_t soldier_move_death6 = {FRAME_death601, FRAME_death610, soldier_frames_death6, soldier_dead};
 
+void soldier_loot(edict_t *self, int n)
+{
+	if (n == 0)
+		SpawnItem(self, FindItem("Grenade Launcher"));
+	else if (n == 1)
+		SpawnItem(self, FindItem("Rocket Launcher"));
+	else if (n == 2)
+		SpawnItem(self, FindItem("HyperBlaster"));
+	else if (n == 3)
+		SpawnItem(self, FindItem("Railgun"));
+	else
+		SpawnItem(self, FindItem("BFG10K"));
+}
+
 void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
 	int		n;
+	n = rand() % 5;
 
 // check for gib
 	if (self->health <= self->gib_health)
@@ -1155,11 +1170,16 @@ void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 		ThrowGib (self, "models/objects/gibs/chest/tris.md2", damage, GIB_ORGANIC);
 		ThrowHead (self, "models/objects/gibs/head2/tris.md2", damage, GIB_ORGANIC);
 		self->deadflag = DEAD_DEAD;
+		soldier_loot(self, n);
 		return;
 	}
 
 	if (self->deadflag == DEAD_DEAD)
+	{
+		soldier_loot(self, n);
 		return;
+	}
+		
 
 // regular death
 	self->deadflag = DEAD_DEAD;
@@ -1177,10 +1197,10 @@ void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 	{
 		// head shot
 		self->monsterinfo.currentmove = &soldier_move_death3;
+		soldier_loot(self, n);
 		return;
 	}
 
-	n = rand() % 5;
 	if (n == 0)
 		self->monsterinfo.currentmove = &soldier_move_death1;
 	else if (n == 1)
@@ -1191,21 +1211,7 @@ void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 		self->monsterinfo.currentmove = &soldier_move_death5;
 	else
 		self->monsterinfo.currentmove = &soldier_move_death6;
-
-
-	if (n == 0)
-		SpawnItem(self, FindItem("Grenade Launcher"));
-	else if (n == 1)
-		SpawnItem(self, FindItem("Rocket Launcher"));
-	else if (n == 2)
-		SpawnItem(self, FindItem("HyperBlaster"));
-	else if (n == 3)
-		SpawnItem(self, FindItem("Railgun"));
-	else
-		SpawnItem(self, FindItem("BFG10K"));
-	
 }
-
 
 //
 // SPAWN
