@@ -1842,20 +1842,6 @@ void ClientBeginServerFrame (edict_t *ent)
 
 	// TESMOD
 
-	// Should we define a regeneration rate to also grow?
-	
-	// Tiers
-	
-	/*
-	if (ent->staminaTier = 0 && ent->max_stamina % 150 == 0)
-	{
-		ent->staminaTier++;
-		ent->stamina_regen++;
-	}
-	else if (ent->staminaTier = 1 && ent->max_stamina % 150)
-	*/
-
-	
 
 	// ========================
 	// Attribute Regeneration
@@ -1868,6 +1854,8 @@ void ClientBeginServerFrame (edict_t *ent)
 		{
 			//ent->magicka += ent->magicka_regen;
 			ent->magicka += (ent->max_magicka / 50);
+			if (ent->magicka > ent->max_magicka) // Correction, in case we go over
+				ent->magicka = ent->max_magicka;
 		}
 	}
 	// Stamina regen
@@ -1877,6 +1865,8 @@ void ClientBeginServerFrame (edict_t *ent)
 		{
 			//ent->stamina += ent->stamina_regen;
 			ent->stamina += (ent->max_stamina / 50);
+			if (ent->stamina > ent->max_stamina) // Correction, in case we go over
+				ent->stamina = ent->max_stamina;
 		}
 	}
 	// ========================

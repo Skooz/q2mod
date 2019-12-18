@@ -384,14 +384,14 @@ static qboolean R_CullAliasModel( vec3_t bbox[8], entity_t *e )
 
 	if ( ( e->frame >= paliashdr->num_frames ) || ( e->frame < 0 ) )
 	{
-		ri.Con_Printf (PRINT_ALL, "R_CullAliasModel %s: no such frame %d\n", 
-			currentmodel->name, e->frame);
+		/*ri.Con_Printf (PRINT_ALL, "R_CullAliasModel %s: no such frame %d\n", 
+			currentmodel->name, e->frame);*/
 		e->frame = 0;
 	}
 	if ( ( e->oldframe >= paliashdr->num_frames ) || ( e->oldframe < 0 ) )
 	{
-		ri.Con_Printf (PRINT_ALL, "R_CullAliasModel %s: no such oldframe %d\n", 
-			currentmodel->name, e->oldframe);
+		/*ri.Con_Printf (PRINT_ALL, "R_CullAliasModel %s: no such oldframe %d\n", 
+			currentmodel->name, e->oldframe);*/
 		e->oldframe = 0;
 	}
 

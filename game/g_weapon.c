@@ -963,11 +963,13 @@ void vectoangles2(vec3_t value1, vec3_t angles)
 ==================
 Fire_Punch
 
-Code from: https://www.moddb.com/games/quake-2/tutorials/adding-a-new-weapon-melee
+Perform a melee attack.
+
+Code based on: https://www.moddb.com/games/quake-2/tutorials/adding-a-new-weapon-melee
 ==================
 */
 
-void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, int kick, int quiet, int mod)
+void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, int kick, int mod)
 {
 	vec3_t		forward, right, up;
 	vec3_t		v;
@@ -978,6 +980,7 @@ void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, 
 	AngleVectors(v, forward, right, up);
 	VectorNormalize(forward);      
 	VectorMA(start, reach, forward, point);	
+	//VectorMA(startPoint, distance, direction, endPoint)
 
 	// See if the hit connects
 	tr = gi.trace(start, NULL, NULL, point, self, MASK_SHOT);
@@ -994,7 +997,21 @@ void fire_punch(edict_t *self, vec3_t start, vec3_t aim, int reach, int damage, 
 
 		// do the damage
 		// FIXME - make the damage appear at right spot and direction
-		T_Damage(tr.ent, self, self, vec3_origin, tr.ent->s.origin, vec3_origin, damage, kick / 2, DAMAGE_ENERGY, mod);
+		T_Damage(tr.ent, self, self, vec3_origin, tr.ent->s.origin, vec3_origin, damage, 200 / 2, DAMAGE_ENERGY, mod);
+		if (kick == 777) // Attribute steal! Corrections if we have to.
+		{
+			self->magicka += damage/2; 
+			self->stamina += damage / 2;
+			if (self->magicka > self->max_magicka)
+				self->magicka = self->max_magicka;
+			if (self->stamina > self->max_stamina)
+				self->stamina = self->max_stamina;
+		}
+		if (kick == 888) // Begone, thot.
+		{
+			VectorMA(tr.ent->velocity, 2500, forward, tr.ent->velocity); // Pull the player forward if you do damage
+			VectorMA(tr.ent->velocity, 200, up, tr.ent->velocity); // Pull up a tad bit. You can't slide;)
+		}
 		gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/slice.wav"), 1, ATTN_IDLE, 0); // Hit enemy sound 
 	}
 	else
@@ -1047,8 +1064,8 @@ void fire_charm(edict_t *self, vec3_t start, vec3_t aimdir)
 
 			if ((tr.ent != self) && (tr.ent->takedamage))
 			{
-				tr.ent->goCrazy = 1;
-				FindTarget(tr.ent);
+				tr.ent->goCrazy = 1;	// Tell 'em to go nuts.
+				FindTarget(tr.ent);		// And find a new target, which isn't us.
 			}
 		}
 

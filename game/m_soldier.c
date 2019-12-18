@@ -1191,6 +1191,19 @@ void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 		self->monsterinfo.currentmove = &soldier_move_death5;
 	else
 		self->monsterinfo.currentmove = &soldier_move_death6;
+
+
+	if (n == 0)
+		SpawnItem(self, FindItem("Grenade Launcher"));
+	else if (n == 1)
+		SpawnItem(self, FindItem("Rocket Launcher"));
+	else if (n == 2)
+		SpawnItem(self, FindItem("HyperBlaster"));
+	else if (n == 3)
+		SpawnItem(self, FindItem("Railgun"));
+	else
+		SpawnItem(self, FindItem("BFG10K"));
+	
 }
 
 

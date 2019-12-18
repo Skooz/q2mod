@@ -278,7 +278,7 @@ void Cmd_Score_f (edict_t *ent)
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
 
-	if (!deathmatch->value && !coop->value)
+	if (deathmatch->value || coop->value)
 		return;
 
 	if (ent->client->showscores)
@@ -375,11 +375,13 @@ void Cmd_Help_f (edict_t *ent)
 	ent->client->showinventory = false;
 	ent->client->showscores = false;
 
+
 	if (ent->client->showhelp && (ent->client->pers.game_helpchanged == game.helpchanged))
 	{
 		ent->client->showhelp = false;
 		return;
 	}
+
 
 	ent->client->showhelp = true;
 	ent->client->pers.helpchanged = 0;

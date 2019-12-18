@@ -1317,14 +1317,14 @@ gitem_t	itemlist[] =
 /* weapon_blaster (.3 .3 1) (-16 -16 -16) (16 16 16)
 always owned, never in the world
 */
-	{
+	{ // Tier 1 sword
 		"weapon_blaster", 
 		NULL,
 		Use_Weapon,
 		NULL,
-		Weapon_Null,//Weapon_Blaster,
+		Weapon_Blaster,
 		"misc/w_pkup.wav",
-		NULL, 0,
+		"models/weapons/sword1/wsword1q2.md2", EF_ROTATE,
 		"models/weapons/test/swordq2.md2",
 /* icon */		"w_blaster",
 /* pickup */	"Blaster",
@@ -1340,14 +1340,14 @@ always owned, never in the world
 
 /*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 2 sword
 		"weapon_shotgun", 
 		Pickup_Weapon,
 		Use_Weapon,
 		NULL,
-		Weapon_Null,//Weapon_Shotgun,
+		Weapon_Shotgun,
 		"misc/w_pkup.wav",
-		"models/weapons/sword2/sword2q2.md2", EF_ROTATE,
+		"models/weapons/sword2/wsword2q2.md2", EF_ROTATE,
 		"models/weapons/sword2/sword2q2.md2",
 /* icon */		"w_shotgun",
 /* pickup */	"Shotgun",
@@ -1363,14 +1363,14 @@ always owned, never in the world
 
 /*QUAKED weapon_supershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 3 sword
 		"weapon_supershotgun", 
 		Pickup_Weapon,
 		Use_Weapon,
 		NULL,
-		Weapon_Null,//Weapon_SuperShotgun,
+		Weapon_SuperShotgun,
 		"misc/w_pkup.wav",
-		"models/weapons/sword3/swordq3.md2", EF_ROTATE,
+		"models/weapons/sword3/wsword3q2.md2", EF_ROTATE,
 		"models/weapons/sword3/swordq3.md2",
 /* icon */		"w_sshotgun",
 /* pickup */	"Super Shotgun",
@@ -1386,14 +1386,14 @@ always owned, never in the world
 
 /*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 4 sword
 		"weapon_machinegun", 
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Null,//Weapon_Machinegun,
+		Weapon_Machinegun,
 		"misc/w_pkup.wav",
-		"models/weapons/sword4/sword4q2.md2", EF_ROTATE,
+		"models/weapons/sword4/wsword4q2.md2", EF_ROTATE,
 		"models/weapons/sword4/sword4q2.md2",
 /* icon */		"w_machinegun",
 /* pickup */	"Machinegun",
@@ -1409,14 +1409,14 @@ always owned, never in the world
 
 /*QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 5 sword
 		"weapon_chaingun", 
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Null,//Weapon_Chaingun,
+		Weapon_Chaingun,
 		"misc/w_pkup.wav",
-		"models/weapons/knife2/knifeq2.md2", EF_ROTATE,
+		"models/weapons/knife2/wknifeq2.md2", EF_ROTATE,
 		"models/weapons/knife2/knifeq2.md2",
 /* icon */		"w_chaingun",
 /* pickup */	"Chaingun",
@@ -1432,20 +1432,20 @@ always owned, never in the world
 
 /*QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 0 sword
 		"ammo_grenades",
 		Pickup_Ammo,
 		Use_Weapon,
-		Drop_Ammo,
-		Weapon_Grenade,
+		Drop_Weapon,//Drop_Ammo,
+		Weapon_Null,//Weapon_Grenade,
 		"misc/am_pkup.wav",
-		"models/items/ammo/grenades/medium/tris.md2", 0,
-		"models/weapons/v_handgr/tris.md2",
+		"models/weapons/test/swordq2.md2", 0,
+		"models/weapons/test/swordq2.md2",
 /* icon */		"a_grenades",
 /* pickup */	"Grenades",
-/* width */		3,
-		5,
-		"grenades",
+/* width */		0,
+		0,
+		NULL,//"grenades",
 		IT_AMMO|IT_WEAPON,
 		WEAP_GRENADES,
 		NULL,
@@ -1455,20 +1455,20 @@ always owned, never in the world
 
 /*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 6 sword
 		"weapon_grenadelauncher",
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
 		Weapon_GrenadeLauncher,
 		"misc/w_pkup.wav",
-		"models/weapons/g_launch/tris.md2", EF_ROTATE,
-		"models/weapons/v_launch/tris.md2",
+		"models/weapons/sword2/wsword2q2.md2", EF_ROTATE,
+		"models/weapons/sword2/ssord2q2.md2",
 /* icon */		"w_glauncher",
 /* pickup */	"Grenade Launcher",
 		0,
-		1,
-		"Grenades",
+		0,
+		NULL,//"Grenades",
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_GRENADELAUNCHER,
 		NULL,
@@ -1478,20 +1478,20 @@ always owned, never in the world
 
 /*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 7 sword
 		"weapon_rocketlauncher",
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
 		Weapon_RocketLauncher,
 		"misc/w_pkup.wav",
-		"models/weapons/g_rocket/tris.md2", EF_ROTATE,
-		"models/weapons/v_rocket/tris.md2",
+		"models/weapons/sword3/wsword3q2.md2", EF_ROTATE,
+		"models/weapons/sword3/ssordq3.md2",
 /* icon */		"w_rlauncher",
 /* pickup */	"Rocket Launcher",
 		0,
-		1,
-		"Rockets",
+		0,
+		NULL,//"Rockets",
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_ROCKETLAUNCHER,
 		NULL,
@@ -1501,20 +1501,20 @@ always owned, never in the world
 
 /*QUAKED weapon_hyperblaster (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 8 sword
 		"weapon_hyperblaster", 
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
 		Weapon_HyperBlaster,
 		"misc/w_pkup.wav",
-		"models/weapons/g_hyperb/tris.md2", EF_ROTATE,
-		"models/weapons/v_hyperb/tris.md2",
+		"models/weapons/sword4/wsword4q2.md2", EF_ROTATE,
+		"models/weapons/sword4/ssord4q2.md2",
 /* icon */		"w_hyperblaster",
 /* pickup */	"HyperBlaster",
 		0,
-		1,
-		"Cells",
+		0,
+		NULL,//"Cells",
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_HYPERBLASTER,
 		NULL,
@@ -1524,20 +1524,20 @@ always owned, never in the world
 
 /*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 9 sword
 		"weapon_railgun", 
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
 		Weapon_Railgun,
 		"misc/w_pkup.wav",
-		"models/weapons/g_rail/tris.md2", EF_ROTATE,
-		"models/weapons/v_rail/tris.md2",
+		"models/weapons/knife2/wknifeq2.md2", EF_ROTATE,
+		"models/weapons/knife2/snifeq2.md2",
 /* icon */		"w_railgun",
 /* pickup */	"Railgun",
 		0,
-		1,
-		"Slugs",
+		0,
+		NULL,//"Slugs",
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_RAILGUN,
 		NULL,
@@ -1547,20 +1547,20 @@ always owned, never in the world
 
 /*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-	{
+	{ // Tier 10 sword
 		"weapon_bfg",
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
 		Weapon_BFG,
 		"misc/w_pkup.wav",
-		"models/weapons/g_bfg/tris.md2", EF_ROTATE,
-		"models/weapons/v_bfg/tris.md2",
+		"models/weapons/sword1/wsword1q2.md2", EF_ROTATE,
+		"models/weapons/test/ssordq2.md2",
 /* icon */		"w_bfg",
 /* pickup */	"BFG10K",
 		0,
-		50,
-		"Cells",
+		0,
+		NULL,//"Cells",
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_BFG,
 		NULL,
