@@ -22,31 +22,33 @@ A melee & spellcasting mod for Quake 2.
   * Invisibility
     * *Enemies cannot spot you; -5 magicka drain per second while active.*
 * **10 Melee weapons**
-  * Sword 1
-    * *15 Damage, 45 Range, 10 Stamina Cost*
-  * Sword 2
-    * *22 Damage, 48 Range, 15 Stamina Cost*
-  * Sword 3
-    * *30 Damage, 51 Range, 20 Stamina Cost*
-  * Sword 4
-    * *37 Damage, 54 Range, 25 Stamina Cost*
-  * Sword (Knife) 5
-    * *40 Damage, 45 Range, 15 Stamina Cost*
-  * Special Sword 6
-    * *30 Damage, 50 Range, 20 Stamina Cost*
-    * ***Swings cause explosions***
-  * Special Sword 7
-    * *15 Damage, 50 Range, 10 Stamina Cost*
-    * ***Swings launch a fireball***
-  * Special Sword 8
-    * *30 Damage, 50 Range, 30 Stamina Cost*
-    * ***Swings launch a charm beam***
-  * Special Sword (Knife) 9
-    * *30 Damage, 45 Range, 10 Stamina Cost*
-    * ***Succesful attacks steal attributes (15 mag, 15 stam)***
-  * Special Sword 10
-    * *15 Damage, 45 Range, 10 Stamina Cost*
-    * ***Succesful attacks launch enemies very far, very fast.***
+  * Basic
+    * Sword 1
+      * *15 Damage, 45 Range, 10 Stamina Cost*
+    * Sword 2
+      * *22 Damage, 48 Range, 15 Stamina Cost*
+    * Sword 3
+      * *30 Damage, 51 Range, 20 Stamina Cost*
+    * Sword 4
+      * *37 Damage, 54 Range, 25 Stamina Cost*
+    * Sword (Knife) 5
+      * *40 Damage, 45 Range, 15 Stamina Cost*
+  * Special
+    * Special Sword 6
+      * *30 Damage, 50 Range, 20 Stamina Cost*
+      * ***Swings cause explosions***
+    * Special Sword 7
+      * *15 Damage, 50 Range, 10 Stamina Cost*
+      * ***Swings launch a fireball***
+    * Special Sword 8
+      * *30 Damage, 50 Range, 30 Stamina Cost*
+      * ***Swings launch a charm beam***
+    * Special Sword (Knife) 9
+      * *30 Damage, 45 Range, 10 Stamina Cost*
+      * ***Succesful attacks steal attributes (15 mag, 15 stam)***
+    * Special Sword 10
+      * *15 Damage, 45 Range, 10 Stamina Cost*
+      * ***Succesful attacks launch enemies very far, very fast.***
 * **Loot drops**
   * Special swords 6-10 randomly drop from soldiers.
   
